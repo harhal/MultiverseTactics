@@ -82,6 +82,11 @@ const FGridCellOffset& FGridCellOffset::operator/=(int A)
 	return *this;
 }
 
+int FGridCellOffset::GetLength() const
+{
+	return FMath::Abs(HorizontalOffset) + FMath::Abs(UprisingDiagonalOffset) + FMath::Abs(FallingDiagonalOffset);
+}
+
 void FGridCellOffset::OptimizeToShortestWay()
 {
 	int Trinity[3] = {-HorizontalOffset, UprisingDiagonalOffset, FallingDiagonalOffset};

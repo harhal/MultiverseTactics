@@ -40,5 +40,7 @@ struct MULTIVERSETACTICS_API FGridCellOffset
 	const FGridCellOffset& operator*=(int A);
 	const FGridCellOffset& operator/=(int A);
 
+	int GetLength() const;
+
 	void OptimizeToShortestWay();
 };

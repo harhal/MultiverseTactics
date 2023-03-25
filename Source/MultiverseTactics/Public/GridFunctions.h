@@ -38,6 +38,9 @@ class MULTIVERSETACTICS_API UGridFunctions : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintPure, DisplayName = "Optimize")
 	static FGridCellOffset OptimizeToShortestWay(const FGridCellOffset& A);
 
+	UFUNCTION(BlueprintPure, DisplayName = "Length")
+	static int GetGridCellOffsetLength(const FGridCellOffset& Offset);
+
 	UFUNCTION(BlueprintPure, meta = (CompactNodeTitle = "+"))
 	static FGridCell AddOffsetToCell(const FGridCell& Cell, const FGridCellOffset& Offset);
 

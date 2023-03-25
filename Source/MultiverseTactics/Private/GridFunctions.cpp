@@ -35,7 +35,7 @@ FGridCellOffset UGridFunctions::MakeDefaultDownCellOffset(bool bEven, int Length
 
 	return Result;
 }
-PRAGMA_DISABLE_OPTIMIZATION
+
 FGridCellOffset UGridFunctions::AddGridCellOffset(const FGridCellOffset& A, const FGridCellOffset& B)
 {
 	return A + B;
@@ -51,6 +51,11 @@ FGridCellOffset UGridFunctions::OptimizeToShortestWay(const FGridCellOffset& A)
 	FGridCellOffset Result = A;
 	Result.OptimizeToShortestWay();
 	return Result;
+}
+
+int UGridFunctions::GetGridCellOffsetLength(const FGridCellOffset& Offset)
+{
+	return Offset.GetLength();
 }
 
 FGridCell UGridFunctions::AddOffsetToCell(const FGridCell& Cell, const FGridCellOffset& Offset)
@@ -117,4 +122,3 @@ void UGridFunctions::BuildStraightWay(const FGridCell& Cell, const FGridCellOffs
 		}
 	}
 }
-PRAGMA_ENABLE_OPTIMIZATION
