@@ -43,4 +43,9 @@ struct MULTIVERSETACTICS_API FGridCell
 	{
 		CellColumn = Column;
 	}
+
+	friend uint32 GetTypeHash(FGridCell GridCell)
+	{
+		return GridCell.CellColumn + (GridCell.CellLine >> 16);
+	}
 };
