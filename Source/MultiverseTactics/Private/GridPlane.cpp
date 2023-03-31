@@ -28,7 +28,7 @@ FVector UGridPlane::WorldToLocalPoint(const FVector& Point) const
 
 FGridCell UGridPlane::GetCellByLocalPoint(const FVector& Point)
 {
-	const float X = Point.X / GetCellsLocalHorizontalHalfOffset();
+	const float X = Point.X / (GetCellsLocalHorizontalHalfOffset() * 2);
 	const float Y = Point.Y / GetCellsLocalVerticalOffset();
 
 	const int LowestPossibleColumn = FMath::FloorToInt(X);
@@ -44,7 +44,7 @@ FGridCell UGridPlane::GetCellByLocalPoint(const FVector& Point)
 	{
 		for (Cell.SetLine(LowestPossibleLine); Cell.GetLine() <= HighestPossibleLine; Cell.SetLine(Cell.GetLine() + 1))
 		{
-			const float DistanceToCell = FVector::Distance(GetCellCenterLocalLocation(Cell), Point);
+			const float DistanceToCell = FVector::Dist2D(GetCellCenterLocalLocation(Cell), Point);
 			if (DistanceToCell < NearestCellDistance)
 			{
 				NearestCell = Cell;
