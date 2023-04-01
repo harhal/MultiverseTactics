@@ -3,7 +3,6 @@
 
 #include "GridPlane.h"
 
-PRAGMA_DISABLE_OPTIMIZATION
 FGridCell UGridPlane::GetCellByPoint(FVector Point) const
 {
 	const FVector& LocalPoint = WorldToLocalPoint(Point);
@@ -14,6 +13,15 @@ FVector UGridPlane::GetCellCenterLocation(const FGridCell& Cell) const
 {
 	const FVector& LocalCenter = GetCellCenterLocalLocation(Cell);
 	return LocalToWorldPoint(LocalCenter);
+}
+
+bool UGridPlane::IsValidCell(const FGridCell& Cell) const
+{
+	return
+		Cell.CellColumn >= 0 &&
+		Cell.CellColumn < GridSize.X &&
+		Cell.CellLine >= 0 &&
+		Cell.CellLine < GridSize.Y;
 }
 
 FVector UGridPlane::LocalToWorldPoint(const FVector& Point) const
@@ -40,7 +48,8 @@ FGridCell UGridPlane::GetCellByLocalPoint(const FVector& Point)
 	FGridCell NearestCell = {};
 	float NearestCellDistance = TNumericLimits<float>::Max();
 
-	for (FGridCell Cell = FGridCell(LowestPossibleColumn, 0); Cell.GetColumn() <= HighestPossibleColumn; Cell.SetColumn(Cell.GetColumn() + 1))
+	for (FGridCell Cell = FGridCell(LowestPossibleColumn, 0); Cell.GetColumn() <= HighestPossibleColumn; Cell.SetColumn(
+		     Cell.GetColumn() + 1))
 	{
 		for (Cell.SetLine(LowestPossibleLine); Cell.GetLine() <= HighestPossibleLine; Cell.SetLine(Cell.GetLine() + 1))
 		{
@@ -64,7 +73,7 @@ FVector UGridPlane::GetCellCenterLocalLocation(const FGridCell& Cell)
 	const float HorizontalLocation = HorizontalOffset * Cell.GetColumn() + HorizontalHalfOffset * bEvenLine;
 
 	const float VerticalLocation = GetCellsLocalVerticalOffset() * Cell.GetLine();
-	
+
 	return FVector(HorizontalLocation, VerticalLocation, 0.f);
 }
 
@@ -84,9 +93,7 @@ FVector UGridPlane::GetLocalCenterOffset() const
 	{
 		return FVector::ZeroVector;
 	}
-	
+
 	const FGridCell& LastCell = FGridCell(GridSize.X - 1, GridSize.Y - 1);
 	return GetCellCenterLocalLocation(LastCell) / 2;
 }
-
-PRAGMA_ENABLE_OPTIMIZATION

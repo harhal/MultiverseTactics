@@ -21,6 +21,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	FVector GetCellCenterLocation(const FGridCell& Cell) const;
+	
+	UFUNCTION(BlueprintPure)
+	bool IsValidCell(const FGridCell& Cell) const;
 
 	FVector LocalToWorldPoint(const FVector& Point) const;
 

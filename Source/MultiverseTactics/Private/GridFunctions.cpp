@@ -60,15 +60,16 @@ int UGridFunctions::GetGridCellOffsetLength(const FGridCellOffset& Offset)
 
 FGridCell UGridFunctions::AddOffsetToCell(const FGridCell& Cell, const FGridCellOffset& Offset)
 {
-	const int UpDownDiff = Offset.UprisingDiagonalOffset - Offset.FallingDiagonalOffset;
-	
 	FGridCell Result;
-	Result.CellLine = Cell.CellLine - UpDownDiff;
-	Result.CellColumn = Cell.CellColumn + Offset.HorizontalOffset - UpDownDiff / 2;
 	
-	if (Result.CellLine % 2 == 0)
+	Result.CellLine = Cell.CellLine + Offset.FallingDiagonalOffset - Offset.UprisingDiagonalOffset;
+	
+	const int RightByDiagSum = Offset.UprisingDiagonalOffset + Offset.FallingDiagonalOffset;	
+	Result.CellColumn = Cell.CellColumn + Offset.HorizontalOffset + RightByDiagSum / 2;
+	
+	if (Cell.CellLine % 2 == 1 == RightByDiagSum > 0)
 	{
-		Result.CellColumn -= UpDownDiff % 2;
+		Result.CellColumn += RightByDiagSum % 2;
 	}
 	
 	return Result;
@@ -80,7 +81,7 @@ FGridCellOffset UGridFunctions::GetOffsetBetweenCells(const FGridCell& A, const 
 	Result.FallingDiagonalOffset = B.CellLine - A.CellLine;	
 	Result.HorizontalOffset = B.CellColumn - (A.CellColumn + Result.FallingDiagonalOffset / 2);
 		
-	if (B.CellLine % 2 == 0)
+	if (A.CellLine % 2 == 1 == Result.FallingDiagonalOffset > 0)
 	{
 		Result.HorizontalOffset -= Result.FallingDiagonalOffset % 2;
 	}
