@@ -15,6 +15,7 @@ class MULTIVERSETACTICS_API UGridFunctions : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
+public:
 	UFUNCTION(BlueprintPure, meta = (CompactNodeTitle = "Horizontal"))
 	static FGridCellOffset MakeHorizontalGridCellOffset();
 
