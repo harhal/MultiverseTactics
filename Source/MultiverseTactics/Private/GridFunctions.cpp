@@ -108,6 +108,12 @@ void UGridFunctions::BuildStraightWay(const FGridCell& Cell, const FGridCellOffs
 			OptimizedOffset.HorizontalOffset -= FMath::Sign(OptimizedOffset.HorizontalOffset);
 			OutWay.Add(CurrentCell);
 		}
+
+		if (OptimizedOffset.FallingDiagonalOffset == 0 &&
+			OptimizedOffset.UprisingDiagonalOffset == 0)
+		{
+			continue;
+		}
 		
 		if ((CurrentCell.CellLine % 2 == 0 && OptimizedOffset.FallingDiagonalOffset != 0) || OptimizedOffset.UprisingDiagonalOffset == 0)
 		{

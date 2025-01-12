@@ -29,7 +29,7 @@ public:
 
 	TObjectPtr<class UChessPawnMovementComponent> GetChessPawnMovementComponent() const;
 	
-protected:
+public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 	TWeakObjectPtr<UGridPlane> DefaultGrid;
 	

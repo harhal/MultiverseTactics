@@ -3,10 +3,12 @@
 #include "ChessPawnMovementComponent.h"
 #include "GridFunctions.h"
 #include "GridPlane.h"
+#include "GameFramework/Character.h"
 
 
 AChessPawn::AChessPawn(const FObjectInitializer& ObjectInitializer) :
-	Super(ObjectInitializer.SetDefaultSubobjectClass<UChessPawnMovementComponent>(CharacterMovementComponentName))
+	Super(ObjectInitializer.SetDefaultSubobjectClass<UChessPawnMovementComponent>(
+		CharacterMovementComponentName)), DefaultGridCell()
 {
 }
 
