@@ -1,8 +1,6 @@
 ﻿#include "ChessPawn.h"
 
 #include "ChessPawnMovementComponent.h"
-#include "GridFunctions.h"
-#include "GridPlane.h"
 #include "GameFramework/Character.h"
 
 
@@ -24,17 +22,17 @@ void AChessPawn::BeginPlay()
 	PutPawnOnBoard(DefaultGrid.Get(), DefaultGridCell);
 }
 
-void AChessPawn::PutPawnOnBoard(UGridPlane* Grid, const FGridCell& Cell)
+void AChessPawn::PutPawnOnBoard(UHhGridPlane* Grid, const FHhGridCell& Cell)
 {
 	GetChessPawnMovementComponent()->PutOnBoard(Grid, Cell);
 }
 
-void AChessPawn::TeleportToCell(const FGridCell& Cell)
+void AChessPawn::TeleportToCell(const FHhGridCell& Cell)
 {
 	GetChessPawnMovementComponent()->TeleportToCell(Cell);
 }
 
-void AChessPawn::MoveToCell(const FGridCell& Cell)
+void AChessPawn::MoveToCell(const FHhGridCell& Cell)
 {
 	GetChessPawnMovementComponent()->MoveToCell(Cell);
 }

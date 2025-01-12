@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GridPlane.h"
+#include "HHGridCell.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ChessPawnMovementComponent.generated.h"
+
+class UHhGridPlane;
 
 UENUM(Blueprintable)
 enum class EChessPawnVisualState : uint8
@@ -22,33 +24,33 @@ class MULTIVERSETACTICS_API UChessPawnMovementComponent : public UCharacterMovem
 public:
 	struct FTransitionInfo
 	{
-		FGridCell PreviousCell;
-		FGridCell TargetCell;
+		FHhGridCell PreviousCell;
+		FHhGridCell TargetCell;
 		FTimerHandle TransitionTimerHandle;
 	};
 	
 	UChessPawnMovementComponent();
 	
 	UFUNCTION(BlueprintCallable)
-	void PutOnBoard(UGridPlane* Grid, const FGridCell& Cell);
+	void PutOnBoard(UHhGridPlane* Grid, const FHhGridCell& Cell);
 
 	UFUNCTION(BlueprintCallable)
-	void TeleportToCell(const FGridCell& Cell);
+	void TeleportToCell(const FHhGridCell& Cell);
 
 	UFUNCTION(BlueprintCallable)
-	void MoveToCell(const FGridCell& Cell);
+	void MoveToCell(const FHhGridCell& Cell);
 
 	UFUNCTION(BlueprintCallable)
 	void SkipTransition();
 
 	UFUNCTION(BlueprintPure)
-	FGridCell GetCurrentCell() const;
+	FHhGridCell GetCurrentCell() const;
 
 	UFUNCTION(BlueprintPure)
-	UGridPlane* GetCurrentGrid() const;
+	UHhGridPlane* GetCurrentGrid() const;
 
 	UFUNCTION(BlueprintPure)
-	void GetCurrentStepsStack(TArray<FGridCell>& OutStepsStack) const;
+	void GetCurrentStepsStack(TArray<FHhGridCell>& OutStepsStack) const;
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -60,17 +62,17 @@ public:
 	EChessPawnVisualState GetVisualState() const;
 
 	UFUNCTION(BlueprintCallable)
-	bool GetTransitionInfo(FGridCell& OutPreviousCell, FGridCell& OutTargetCell) const;
+	bool GetTransitionInfo(FHhGridCell& OutPreviousCell, FHhGridCell& OutTargetCell) const;
 
 private:
 	UPROPERTY()
-	TWeakObjectPtr<UGridPlane> CurrentGrid = nullptr;
+	TWeakObjectPtr<UHhGridPlane> CurrentGrid = nullptr;
 
 	UPROPERTY()
-	FGridCell CurrentCell = FGridCell();
+	FHhGridCell CurrentCell = FHhGridCell();
 
 	UPROPERTY()
-	TArray<FGridCell> StepsStack = TArray<FGridCell>();
+	TArray<FHhGridCell> StepsStack = TArray<FHhGridCell>();
 
 	//Cells per second
 	UPROPERTY(EditDefaultsOnly)
@@ -83,5 +85,5 @@ private:
 
 	void MoveToNextCell();
 
-	FVector GetPawnLocationForGridCell(const FGridCell& Cell) const;
+	FVector GetPawnLocationForGridCell(const FHhGridCell& Cell) const;
 };

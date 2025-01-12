@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GridCell.h"
-#include "GridPlane.h"
+#include "HHGridCell.h"
 #include "GameFramework/Character.h"
 #include "ChessPawn.generated.h"
+
+class UHhGridPlane;
 
 UCLASS()
 class MULTIVERSETACTICS_API AChessPawn : public ACharacter
@@ -19,20 +20,20 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
-	void PutPawnOnBoard(UGridPlane* Grid, const FGridCell& Cell);
+	void PutPawnOnBoard(UHhGridPlane* Grid, const FHhGridCell& Cell);
 
 	UFUNCTION(BlueprintCallable)
-	void TeleportToCell(const FGridCell& Cell);
+	void TeleportToCell(const FHhGridCell& Cell);
 
 	UFUNCTION(BlueprintCallable)
-	void MoveToCell(const FGridCell& Cell);
+	void MoveToCell(const FHhGridCell& Cell);
 
 	TObjectPtr<class UChessPawnMovementComponent> GetChessPawnMovementComponent() const;
 	
 public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
-	TWeakObjectPtr<UGridPlane> DefaultGrid;
+	TWeakObjectPtr<UHhGridPlane> DefaultGrid;
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
-	FGridCell DefaultGridCell;
+	FHhGridCell DefaultGridCell;
 };

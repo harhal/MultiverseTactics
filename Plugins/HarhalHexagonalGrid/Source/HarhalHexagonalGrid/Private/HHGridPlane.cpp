@@ -1,21 +1,21 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GridPlane.h"
+#include "HHGridPlane.h"
 
-FGridCell UGridPlane::GetCellByPoint(FVector Point) const
+FHhGridCell UHhGridPlane::GetCellByPoint(FVector Point) const
 {
 	const FVector& LocalPoint = WorldToLocalPoint(Point);
 	return GetCellByLocalPoint(LocalPoint);
 }
 
-FVector UGridPlane::GetCellCenterLocation(const FGridCell& Cell) const
+FVector UHhGridPlane::GetCellCenterLocation(const FHhGridCell& Cell) const
 {
 	const FVector& LocalCenter = GetCellCenterLocalLocation(Cell);
 	return LocalToWorldPoint(LocalCenter);
 }
 
-bool UGridPlane::IsValidCell(const FGridCell& Cell) const
+bool UHhGridPlane::IsValidCell(const FHhGridCell& Cell) const
 {
 	return
 		Cell.CellColumn >= 0 &&
@@ -24,17 +24,17 @@ bool UGridPlane::IsValidCell(const FGridCell& Cell) const
 		Cell.CellLine < GridSize.Y;
 }
 
-FVector UGridPlane::LocalToWorldPoint(const FVector& Point) const
+FVector UHhGridPlane::LocalToWorldPoint(const FVector& Point) const
 {
 	return GetComponentTransform().TransformPositionNoScale((Point - GetLocalCenterOffset()) * CellSize);
 }
 
-FVector UGridPlane::WorldToLocalPoint(const FVector& Point) const
+FVector UHhGridPlane::WorldToLocalPoint(const FVector& Point) const
 {
 	return GetComponentTransform().InverseTransformPositionNoScale(Point) / CellSize + GetLocalCenterOffset();
 }
 
-FGridCell UGridPlane::GetCellByLocalPoint(const FVector& Point)
+FHhGridCell UHhGridPlane::GetCellByLocalPoint(const FVector& Point)
 {
 	const float X = Point.X / (GetCellsLocalHorizontalHalfOffset() * 2);
 	const float Y = Point.Y / GetCellsLocalVerticalOffset();
@@ -45,10 +45,10 @@ FGridCell UGridPlane::GetCellByLocalPoint(const FVector& Point)
 	const int LowestPossibleLine = FMath::FloorToInt(Y);
 	const int HighestPossibleLine = FMath::CeilToInt(Y);
 
-	FGridCell NearestCell = {};
+	FHhGridCell NearestCell = {};
 	float NearestCellDistance = TNumericLimits<float>::Max();
 
-	for (FGridCell Cell = FGridCell(LowestPossibleColumn, 0); Cell.GetColumn() <= HighestPossibleColumn; Cell.SetColumn(
+	for (FHhGridCell Cell = FHhGridCell(LowestPossibleColumn, 0); Cell.GetColumn() <= HighestPossibleColumn; Cell.SetColumn(
 		     Cell.GetColumn() + 1))
 	{
 		for (Cell.SetLine(LowestPossibleLine); Cell.GetLine() <= HighestPossibleLine; Cell.SetLine(Cell.GetLine() + 1))
@@ -65,7 +65,7 @@ FGridCell UGridPlane::GetCellByLocalPoint(const FVector& Point)
 	return NearestCell;
 }
 
-FVector UGridPlane::GetCellCenterLocalLocation(const FGridCell& Cell)
+FVector UHhGridPlane::GetCellCenterLocalLocation(const FHhGridCell& Cell)
 {
 	const int bEvenLine = Cell.GetLine() % 2;
 	const float HorizontalHalfOffset = GetCellsLocalHorizontalHalfOffset();
@@ -77,23 +77,23 @@ FVector UGridPlane::GetCellCenterLocalLocation(const FGridCell& Cell)
 	return FVector(HorizontalLocation, VerticalLocation, 0.f);
 }
 
-float UGridPlane::GetCellsLocalHorizontalHalfOffset()
+float UHhGridPlane::GetCellsLocalHorizontalHalfOffset()
 {
 	return LocalCellLongestRadius * FMath::Cos(AngleBetweenLongestAndShortestRadius);
 }
 
-float UGridPlane::GetCellsLocalVerticalOffset()
+float UHhGridPlane::GetCellsLocalVerticalOffset()
 {
 	return LocalCellLongestRadius * (1 + FMath::Sin(AngleBetweenLongestAndShortestRadius));
 }
 
-FVector UGridPlane::GetLocalCenterOffset() const
+FVector UHhGridPlane::GetLocalCenterOffset() const
 {
 	if (!bAutoCenter)
 	{
 		return FVector::ZeroVector;
 	}
 
-	const FGridCell& LastCell = FGridCell(GridSize.X - 1, GridSize.Y - 1);
+	const FHhGridCell& LastCell = FHhGridCell(GridSize.X - 1, GridSize.Y - 1);
 	return GetCellCenterLocalLocation(LastCell) / 2;
 }

@@ -1,26 +1,26 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GridFunctions.h"
+#include "HHGridFunctions.h"
 
-FGridCellOffset UGridFunctions::MakeHorizontalGridCellOffset()
+FHhGridCellOffset UHhGridFunctions::MakeHorizontalGridCellOffset()
 {
-	return FGridCellOffset::OneHorizontalOffset;
+	return FHhGridCellOffset::OneHorizontalOffset;
 }
 
-FGridCellOffset UGridFunctions::MakeUprisingDiagonalGridCellOffset()
+FHhGridCellOffset UHhGridFunctions::MakeUprisingDiagonalGridCellOffset()
 {
-	return FGridCellOffset::OneUprisingDiagonalOffset;
+	return FHhGridCellOffset::OneUprisingDiagonalOffset;
 }
 
-FGridCellOffset UGridFunctions::MakeFallingDiagonalGridCellOffset()
+FHhGridCellOffset UHhGridFunctions::MakeFallingDiagonalGridCellOffset()
 {
-	return FGridCellOffset::OneFallingDiagonalOffset;
+	return FHhGridCellOffset::OneFallingDiagonalOffset;
 }
 
-FGridCellOffset UGridFunctions::MakeDefaultDownCellOffset(bool bEven, int Length)
+FHhGridCellOffset UHhGridFunctions::MakeDefaultDownCellOffset(bool bEven, int Length)
 {
-	FGridCellOffset Result = FGridCellOffset{0, - Length / 2, Length / 2};
+	FHhGridCellOffset Result = FHhGridCellOffset{0, - Length / 2, Length / 2};
 	if (Length % 2 == 1)
 	{
 		if (bEven)
@@ -36,31 +36,31 @@ FGridCellOffset UGridFunctions::MakeDefaultDownCellOffset(bool bEven, int Length
 	return Result;
 }
 
-FGridCellOffset UGridFunctions::AddGridCellOffset(const FGridCellOffset& A, const FGridCellOffset& B)
+FHhGridCellOffset UHhGridFunctions::AddGridCellOffset(const FHhGridCellOffset& A, const FHhGridCellOffset& B)
 {
 	return A + B;
 }
 
-FGridCellOffset UGridFunctions::MultiplyGridCellOffset(const FGridCellOffset& A, float B)
+FHhGridCellOffset UHhGridFunctions::MultiplyGridCellOffset(const FHhGridCellOffset& A, float B)
 {
 	return A * B;
 }
 
-FGridCellOffset UGridFunctions::OptimizeToShortestWay(const FGridCellOffset& A)
+FHhGridCellOffset UHhGridFunctions::OptimizeToShortestWay(const FHhGridCellOffset& A)
 {
-	FGridCellOffset Result = A;
+	FHhGridCellOffset Result = A;
 	Result.OptimizeToShortestWay();
 	return Result;
 }
 
-int UGridFunctions::GetGridCellOffsetLength(const FGridCellOffset& Offset)
+int UHhGridFunctions::GetGridCellOffsetLength(const FHhGridCellOffset& Offset)
 {
 	return Offset.GetLength();
 }
 
-FGridCell UGridFunctions::AddOffsetToCell(const FGridCell& Cell, const FGridCellOffset& Offset)
+FHhGridCell UHhGridFunctions::AddOffsetToCell(const FHhGridCell& Cell, const FHhGridCellOffset& Offset)
 {
-	FGridCell Result;
+	FHhGridCell Result;
 	
 	Result.CellLine = Cell.CellLine + Offset.FallingDiagonalOffset - Offset.UprisingDiagonalOffset;
 	
@@ -75,9 +75,9 @@ FGridCell UGridFunctions::AddOffsetToCell(const FGridCell& Cell, const FGridCell
 	return Result;
 }
 
-FGridCellOffset UGridFunctions::GetOffsetBetweenCells(const FGridCell& A, const FGridCell& B)
+FHhGridCellOffset UHhGridFunctions::GetOffsetBetweenCells(const FHhGridCell& A, const FHhGridCell& B)
 {
-	FGridCellOffset Result;
+	FHhGridCellOffset Result;
 	Result.FallingDiagonalOffset = B.CellLine - A.CellLine;	
 	Result.HorizontalOffset = B.CellColumn - (A.CellColumn + Result.FallingDiagonalOffset / 2);
 		
@@ -91,10 +91,10 @@ FGridCellOffset UGridFunctions::GetOffsetBetweenCells(const FGridCell& A, const 
 	return Result;
 }
 
-void UGridFunctions::BuildStraightWay(const FGridCell& Cell, const FGridCellOffset& Offset, TArray<FGridCell>& OutWay)
+void UHhGridFunctions::BuildStraightWay(const FHhGridCell& Cell, const FHhGridCellOffset& Offset, TArray<FHhGridCell>& OutWay)
 {
-	FGridCellOffset OptimizedOffset = OptimizeToShortestWay(Offset);
-	FGridCell CurrentCell = Cell;
+	FHhGridCellOffset OptimizedOffset = OptimizeToShortestWay(Offset);
+	FHhGridCell CurrentCell = Cell;
 
 	OutWay.Add(CurrentCell);
 
@@ -117,13 +117,13 @@ void UGridFunctions::BuildStraightWay(const FGridCell& Cell, const FGridCellOffs
 		
 		if ((CurrentCell.CellLine % 2 == 0 && OptimizedOffset.FallingDiagonalOffset != 0) || OptimizedOffset.UprisingDiagonalOffset == 0)
 		{
-			CurrentCell = AddOffsetToCell(CurrentCell, FGridCellOffset::OneFallingDiagonalOffset * FMath::Sign(OptimizedOffset.FallingDiagonalOffset));
+			CurrentCell = AddOffsetToCell(CurrentCell, FHhGridCellOffset::OneFallingDiagonalOffset * FMath::Sign(OptimizedOffset.FallingDiagonalOffset));
 			OptimizedOffset.FallingDiagonalOffset -= FMath::Sign(OptimizedOffset.FallingDiagonalOffset);
 			OutWay.Add(CurrentCell);
 		}
 		else
 		{
-			CurrentCell = AddOffsetToCell(CurrentCell, FGridCellOffset::OneUprisingDiagonalOffset * FMath::Sign(OptimizedOffset.UprisingDiagonalOffset));
+			CurrentCell = AddOffsetToCell(CurrentCell, FHhGridCellOffset::OneUprisingDiagonalOffset * FMath::Sign(OptimizedOffset.UprisingDiagonalOffset));
 			OptimizedOffset.UprisingDiagonalOffset -= FMath::Sign(OptimizedOffset.UprisingDiagonalOffset);
 			OutWay.Add(CurrentCell);
 		}

@@ -3,15 +3,15 @@
 
 #include "ChessPawnMovementComponent.h"
 
-#include "GridCellOffset.h"
-#include "GridFunctions.h"
+#include "HHGridFunctions.h"
+#include "HHGridPlane.h"
 #include "GameFramework/RootMotionSource.h"
 
 UChessPawnMovementComponent::UChessPawnMovementComponent()
 {
 }
 
-void UChessPawnMovementComponent::PutOnBoard(UGridPlane* Grid, const FGridCell& Cell)
+void UChessPawnMovementComponent::PutOnBoard(UHhGridPlane* Grid, const FHhGridCell& Cell)
 {
 	GetOwner()->SetActorEnableCollision(false);
 	SetMovementMode(MOVE_Custom);
@@ -19,7 +19,7 @@ void UChessPawnMovementComponent::PutOnBoard(UGridPlane* Grid, const FGridCell& 
 	TeleportToCell(Cell);
 }
 
-void UChessPawnMovementComponent::TeleportToCell(const FGridCell& Cell)
+void UChessPawnMovementComponent::TeleportToCell(const FHhGridCell& Cell)
 {
 	const FVector& DestLocation = GetPawnLocationForGridCell(Cell);
 	const FRotator& DestRotation = GetPawnOwner()->GetActorRotation();
@@ -28,12 +28,12 @@ void UChessPawnMovementComponent::TeleportToCell(const FGridCell& Cell)
 	CurrentCell = Cell;
 }
 
-void UChessPawnMovementComponent::MoveToCell(const FGridCell& Cell)
+void UChessPawnMovementComponent::MoveToCell(const FHhGridCell& Cell)
 {
-	const FGridCellOffset& Offset = UGridFunctions::GetOffsetBetweenCells(CurrentCell, Cell);
+	const FHhGridCellOffset& Offset = UHhGridFunctions::GetOffsetBetweenCells(CurrentCell, Cell);
 
-	TArray<FGridCell> Way;
-	UGridFunctions::BuildStraightWay(CurrentCell, Offset, Way);
+	TArray<FHhGridCell> Way;
+	UHhGridFunctions::BuildStraightWay(CurrentCell, Offset, Way);
 
 	int32 StepsCount = Way.Num() - 1;
 	StepsStack.Reserve(StepsCount);
@@ -56,7 +56,7 @@ void UChessPawnMovementComponent::MoveToNextCell()
 	}
 	
 	const float StepDuration = 1.f / Speed;
-	const FGridCell NextCell = StepsStack.Pop();
+	const FHhGridCell NextCell = StepsStack.Pop();
 	
 	const TSharedPtr<FRootMotionSource_MoveToForce>& RootMotionSource = MakeShared<FRootMotionSource_MoveToForce>();
 	RootMotionSource->TargetLocation = GetPawnLocationForGridCell(NextCell);
@@ -87,7 +87,7 @@ void UChessPawnMovementComponent::MoveToNextCell()
 	}, StepDuration, false);
 }
 
-FVector UChessPawnMovementComponent::GetPawnLocationForGridCell(const FGridCell& Cell) const
+FVector UChessPawnMovementComponent::GetPawnLocationForGridCell(const FHhGridCell& Cell) const
 {
 	const float HalfHeight = GetPawnCapsuleExtent(SHRINK_None).Z;
 	const FVector& Offset = GetOwner()->GetActorRotation().RotateVector(FVector::DownVector) * HalfHeight;
@@ -103,7 +103,7 @@ void UChessPawnMovementComponent::SkipTransition()
 
 	if (!StepsStack.IsEmpty())
 	{
-		const FGridCell LastCell = StepsStack[0];
+		const FHhGridCell LastCell = StepsStack[0];
 		CurrentCell = LastCell;
 		StepsStack.Empty();
 	}
@@ -119,17 +119,17 @@ void UChessPawnMovementComponent::SkipTransition()
 	Velocity = FVector::Zero();
 }
 
-FGridCell UChessPawnMovementComponent::GetCurrentCell() const
+FHhGridCell UChessPawnMovementComponent::GetCurrentCell() const
 {
 	return CurrentCell;
 }
 
-UGridPlane* UChessPawnMovementComponent::GetCurrentGrid() const
+UHhGridPlane* UChessPawnMovementComponent::GetCurrentGrid() const
 {
 	return CurrentGrid.Get();
 }
 
-void UChessPawnMovementComponent::GetCurrentStepsStack(TArray<FGridCell>& OutCurrentWay) const
+void UChessPawnMovementComponent::GetCurrentStepsStack(TArray<FHhGridCell>& OutCurrentWay) const
 {
 	OutCurrentWay = StepsStack;
 }
@@ -172,7 +172,7 @@ EChessPawnVisualState UChessPawnMovementComponent::GetVisualState() const
 	return VisualState;
 }
 
-bool UChessPawnMovementComponent::GetTransitionInfo(FGridCell& OutPreviousCell, FGridCell& OutTargetCell) const
+bool UChessPawnMovementComponent::GetTransitionInfo(FHhGridCell& OutPreviousCell, FHhGridCell& OutTargetCell) const
 {
 	if (VisualState != EChessPawnVisualState::InTransition)
 	{

@@ -2,36 +2,35 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "GridCell.h"
-#include "GridPlane.generated.h"
+#include "HHGridCell.h"
+#include "HHGridPlane.generated.h"
 
 /**
  * 
  */
  
 UCLASS(Blueprintable, BlueprintType, meta = (BlueprintSpawnableComponent = true))
-class MULTIVERSETACTICS_API UGridPlane : public USceneComponent
+class HARHALHEXAGONALGRID_API UHhGridPlane : public USceneComponent
 {
 	GENERATED_BODY()
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	FGridCell GetCellByPoint(FVector Point) const;
+	FHhGridCell GetCellByPoint(FVector Point) const;
 	
 	UFUNCTION(BlueprintCallable)
-	FVector GetCellCenterLocation(const FGridCell& Cell) const;
+	FVector GetCellCenterLocation(const FHhGridCell& Cell) const;
 	
 	UFUNCTION(BlueprintPure)
-	bool IsValidCell(const FGridCell& Cell) const;
+	bool IsValidCell(const FHhGridCell& Cell) const;
 
 	FVector LocalToWorldPoint(const FVector& Point) const;
 
 	FVector WorldToLocalPoint(const FVector& Point) const;
 	
-	static FGridCell GetCellByLocalPoint(const FVector& Point);
+	static FHhGridCell GetCellByLocalPoint(const FVector& Point);
 	
-	static FVector GetCellCenterLocalLocation(const FGridCell& Cell);
+	static FVector GetCellCenterLocalLocation(const FHhGridCell& Cell);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float CellSize = 1.0f;

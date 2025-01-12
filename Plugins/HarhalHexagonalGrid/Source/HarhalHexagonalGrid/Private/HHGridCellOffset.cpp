@@ -1,34 +1,34 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GridCellOffset.h"
+#include "HHGridCellOffset.h"
 
-const FGridCellOffset FGridCellOffset::OneHorizontalOffset =
-	FGridCellOffset{1, 0, 0};
-const FGridCellOffset FGridCellOffset::OneUprisingDiagonalOffset =
-	FGridCellOffset{0, 1, 0};
-const FGridCellOffset FGridCellOffset::OneFallingDiagonalOffset =
-	FGridCellOffset{0, 0, 1};
+const FHhGridCellOffset FHhGridCellOffset::OneHorizontalOffset =
+	FHhGridCellOffset{1, 0, 0};
+const FHhGridCellOffset FHhGridCellOffset::OneUprisingDiagonalOffset =
+	FHhGridCellOffset{0, 1, 0};
+const FHhGridCellOffset FHhGridCellOffset::OneFallingDiagonalOffset =
+	FHhGridCellOffset{0, 0, 1};
 
-FGridCellOffset FGridCellOffset::operator+(const FGridCellOffset& OtherOffset) const
+FHhGridCellOffset FHhGridCellOffset::operator+(const FHhGridCellOffset& OtherOffset) const
 {
-	return FGridCellOffset{
+	return FHhGridCellOffset{
 		HorizontalOffset + OtherOffset.HorizontalOffset,
 		UprisingDiagonalOffset + OtherOffset.UprisingDiagonalOffset,
 		FallingDiagonalOffset + OtherOffset.FallingDiagonalOffset
 	};
 }
 
-FGridCellOffset FGridCellOffset::operator-(const FGridCellOffset& OtherOffset) const
+FHhGridCellOffset FHhGridCellOffset::operator-(const FHhGridCellOffset& OtherOffset) const
 {
-	return FGridCellOffset{
+	return FHhGridCellOffset{
 		HorizontalOffset - OtherOffset.HorizontalOffset,
 		UprisingDiagonalOffset - OtherOffset.UprisingDiagonalOffset,
 		FallingDiagonalOffset - OtherOffset.FallingDiagonalOffset
 	};
 }
 
-const FGridCellOffset& FGridCellOffset::operator+=(const FGridCellOffset& OtherOffset)
+const FHhGridCellOffset& FHhGridCellOffset::operator+=(const FHhGridCellOffset& OtherOffset)
 {
 	HorizontalOffset += OtherOffset.HorizontalOffset;
 	UprisingDiagonalOffset += OtherOffset.UprisingDiagonalOffset;
@@ -37,7 +37,7 @@ const FGridCellOffset& FGridCellOffset::operator+=(const FGridCellOffset& OtherO
 	return *this;
 }
 
-const FGridCellOffset& FGridCellOffset::operator-=(const FGridCellOffset& OtherOffset)
+const FHhGridCellOffset& FHhGridCellOffset::operator-=(const FHhGridCellOffset& OtherOffset)
 {
 	HorizontalOffset -= OtherOffset.HorizontalOffset;
 	UprisingDiagonalOffset -= OtherOffset.UprisingDiagonalOffset;
@@ -46,25 +46,25 @@ const FGridCellOffset& FGridCellOffset::operator-=(const FGridCellOffset& OtherO
 	return *this;
 }
 
-FGridCellOffset FGridCellOffset::operator*(int A) const
+FHhGridCellOffset FHhGridCellOffset::operator*(int A) const
 {
-	return FGridCellOffset{
+	return FHhGridCellOffset{
 		HorizontalOffset * A,
 		UprisingDiagonalOffset * A,
 		FallingDiagonalOffset * A
 	};
 }
 
-FGridCellOffset FGridCellOffset::operator/(int A) const
+FHhGridCellOffset FHhGridCellOffset::operator/(int A) const
 {
-	return FGridCellOffset{
+	return FHhGridCellOffset{
 		HorizontalOffset / A,
 		UprisingDiagonalOffset / A,
 		FallingDiagonalOffset / A
 	};
 }
 
-const FGridCellOffset& FGridCellOffset::operator*=(int A)
+const FHhGridCellOffset& FHhGridCellOffset::operator*=(int A)
 {
 	HorizontalOffset *= A;
 	UprisingDiagonalOffset *= A;
@@ -73,7 +73,7 @@ const FGridCellOffset& FGridCellOffset::operator*=(int A)
 	return *this;
 }
 
-const FGridCellOffset& FGridCellOffset::operator/=(int A)
+const FHhGridCellOffset& FHhGridCellOffset::operator/=(int A)
 {
 	HorizontalOffset /= A;
 	UprisingDiagonalOffset /= A;
@@ -82,12 +82,12 @@ const FGridCellOffset& FGridCellOffset::operator/=(int A)
 	return *this;
 }
 
-int FGridCellOffset::GetLength() const
+int FHhGridCellOffset::GetLength() const
 {
 	return FMath::Abs(HorizontalOffset) + FMath::Abs(UprisingDiagonalOffset) + FMath::Abs(FallingDiagonalOffset);
 }
 
-void FGridCellOffset::OptimizeToShortestWay()
+void FHhGridCellOffset::OptimizeToShortestWay()
 {
 	int Trinity[3] = {-HorizontalOffset, UprisingDiagonalOffset, FallingDiagonalOffset};
 	Algo::Sort(Trinity);
