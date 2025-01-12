@@ -21,7 +21,7 @@ void UChessPawnMovementComponent::PutOnBoard(UGridPlane* Grid, const FGridCell& 
 
 void UChessPawnMovementComponent::TeleportToCell(const FGridCell& Cell)
 {
-	const FVector& DestLocation = CurrentGrid->GetCellCenterLocation(Cell);
+	const FVector& DestLocation = GetPawnLocationForGridCell(Cell);
 	const FRotator& DestRotation = GetPawnOwner()->GetActorRotation();
 	GetPawnOwner()->TeleportTo(DestLocation, DestRotation);
 	
@@ -59,8 +59,8 @@ void UChessPawnMovementComponent::MoveToNextCell()
 	const FGridCell NextCell = StepsStack.Pop();
 	
 	const TSharedPtr<FRootMotionSource_MoveToForce>& RootMotionSource = MakeShared<FRootMotionSource_MoveToForce>();
-	RootMotionSource->TargetLocation = CurrentGrid->GetCellCenterLocation(NextCell);
-	RootMotionSource->StartLocation = CurrentGrid->GetCellCenterLocation(CurrentCell);
+	RootMotionSource->TargetLocation = GetPawnLocationForGridCell(NextCell);
+	RootMotionSource->StartLocation = GetPawnLocationForGridCell(CurrentCell);
 	RootMotionSource->Duration = StepDuration;
 	RootMotionSource->InstanceName = RootMotionSourceName;
 	
@@ -87,6 +87,13 @@ void UChessPawnMovementComponent::MoveToNextCell()
 	}, StepDuration, false);
 }
 
+FVector UChessPawnMovementComponent::GetPawnLocationForGridCell(const FGridCell& Cell) const
+{
+	const float HalfHeight = GetPawnCapsuleExtent(SHRINK_None).Z;
+	const FVector& Offset = GetOwner()->GetActorRotation().RotateVector(FVector::DownVector) * HalfHeight;
+	return CurrentGrid->GetCellCenterLocation(Cell) - Offset;
+}
+
 void UChessPawnMovementComponent::SkipTransition()
 {
 	if (VisualState != EChessPawnVisualState::InTransition)
@@ -101,7 +108,7 @@ void UChessPawnMovementComponent::SkipTransition()
 		StepsStack.Empty();
 	}
 	
-	const FVector& DestLocation = CurrentGrid->GetCellCenterLocation(CurrentCell);
+	const FVector& DestLocation = GetPawnLocationForGridCell(CurrentCell);
 	const FRotator& DestRotation = GetPawnOwner()->GetActorRotation();
 	GetPawnOwner()->TeleportTo(DestLocation, DestRotation);
 
@@ -144,12 +151,15 @@ void UChessPawnMovementComponent::PhysCustom(float deltaTime, int32 Iterations)
 	
 	ApplyRootMotionToVelocity(deltaTime);
 
-	FVector OldLocation = UpdatedComponent->GetComponentLocation();
+	const FVector OldLocation = UpdatedComponent->GetComponentLocation();
 	const FVector Adjusted = Velocity * deltaTime;
-	FHitResult Hit(1.f);
-	SafeMoveUpdatedComponent(Adjusted, UpdatedComponent->GetComponentQuat(), true, Hit);
+	const FQuat Rotation = Velocity.IsNearlyZero() ? UpdatedComponent->GetComponentQuat() : Velocity.ToOrientationRotator().Quaternion();
+	FHitResult Hit{};
+	SafeMoveUpdatedComponent(Adjusted, Rotation, true, Hit);
 
 	Velocity = (UpdatedComponent->GetComponentLocation() - OldLocation) / deltaTime;
+
+	PhysicsRotation(deltaTime);
 }
 
 bool UChessPawnMovementComponent::IsFalling() const

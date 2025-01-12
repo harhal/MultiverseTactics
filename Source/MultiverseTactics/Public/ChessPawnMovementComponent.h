@@ -82,4 +82,6 @@ private:
 	FTransitionInfo TransitionInfo = FTransitionInfo();
 
 	void MoveToNextCell();
+
+	FVector GetPawnLocationForGridCell(const FGridCell& Cell) const;
 };
